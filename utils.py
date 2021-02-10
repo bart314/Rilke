@@ -1,4 +1,4 @@
-#import gensim
+import gensim
 import numpy as np
 
 seeds = ['Erstaunte', 'Aber', 'Nirgends', 'O', 'Hiersein', 'Nicht', 'Hier', 'Stehn', 'Jeder', 'Fänden', 'Eines', 'Plätze', 'Werbung', 'Einsam', 'Oder', 'Da', 'Preise', 'Ich', 'Ach', 'Mit', 'Dass', 'Frühe', 'Und', 'Engel', 'Siehe', 'Dann', 'Freilich', 'Wo', 'Feigenbaum', 'Liebende', 'Schließlich', 'Doch', 'Wunderlich', 'Nur', 'Uns', 'Denn', 'War', 'Wießt', 'Ja', 'Hab', 'Oh', 'Wir', 'Jede', 'Wäre', 'Warum', 'Würfen', 'Stimmen', 'Erde', 'Du', 'Wer']
@@ -18,6 +18,8 @@ def get_strophe_length():
   return np.random.choice(lens, p=dist)
 
 
+
+
 def find_ten_closest_words(v, k=1):
         # Calculate the vector difference from each word to the input vector
     diff = embedding.values - v 
@@ -33,4 +35,21 @@ def find_ten_closest_words(v, k=1):
     ind = delta.argsort()
     print (ind[:10])
     print( [embedding.iloc[i].name for i in ind[:10]])
-    
+
+
+def get_synoniems(w):
+    syns = trained_model.most_similar(w)
+    print (f"Bitte wählen Sie eine Synoniem für {w}")
+    ctr = 1
+    for s in syns:
+        print (f'[{ctr}] {s[0]}')
+        ctr += 1
+
+    ch = input ('Ihre Wähl: ')
+    return syns[int(ch)-1][0]
+
+
+
+trained_model = gensim.models.KeyedVectors.load_word2vec_format('files/german.model', binary=True)
+## remove original vectors to free up memory
+trained_model.init_sims(replace=True)
